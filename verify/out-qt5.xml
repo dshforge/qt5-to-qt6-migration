@@ -1,0 +1,7 @@
+<scada>
+  <device name="Pump-01" unit="25.4 °C"/>
+  <device name="Vanne-été" tol="±0.5"/>
+  <device name="?????" note="cyrillic"/>
+  <device name="???" note="cjk"/>
+  <device name="??" note="astral plane"/>
+</scada>
