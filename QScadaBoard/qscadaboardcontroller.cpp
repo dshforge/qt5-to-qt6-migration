@@ -261,7 +261,7 @@ void QScadaBoardController::openProject(QString file)
         QFile lFile(file);
         if (lFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
             QTextStream lStreamFileOut(&lFile);
-            lStreamFileOut.setCodec("UTF-8");
+            lStreamFileOut.setEncoding(QStringConverter::Utf8);
             lRawData = lStreamFileOut.readAll().toUtf8();
             lFile.close();
 
@@ -312,7 +312,7 @@ void QScadaBoardController::saveProject(QString file)
         QFile lFile(file);
         if (lFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
             QTextStream lOut(&lFile);
-            lOut.setCodec("UTF-8");
+            lOut.setEncoding(QStringConverter::Utf8);
             lOut << lDevices;
         } else {
             QString lMessage(tr("Something went wrong while trying to create file"));
