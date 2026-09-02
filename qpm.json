@@ -1,0 +1,23 @@
+{
+  "name": "com.indeema.qsimplescada",
+  "description": "Qt based simple SCADA framework, with dashboard, static and dynamic components",
+  "author": {
+    "name": "Indeema Software Inc.",
+    "email": "support@indeema.com"
+  },
+  "repository": {
+    "type": "GITHUB",
+    "url": "https://github.com/IndeemaSoftware/QSimpleScada.git"
+  },
+  "version": {
+    "label": "0.9.1",
+    "revision": "",
+    "fingerprint": ""
+  },
+  "dependencies": [
+    "com.indeema.eeiot@0.2.1"
+  ],
+  "license": "MIT",
+  "pri_filename": "com_indeema_QSimpleScada.pri",
+  "webpage": "https://indeema.com"
+}
