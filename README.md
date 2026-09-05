@@ -25,8 +25,7 @@ Phase 5   a characterisation test, and what it caught
 | Build | 49.7 s with nmake, 21.0 s with Ninja |
 | Warnings | 0 either way |
 
-The build times compare nmake with Ninja, not Qt 5 with Qt 6. Quoting
-that as a speedup would be dishonest.
+Those build times compare nmake with Ninja, not Qt 5 with Qt 6.
 
 ## The bit worth reading
 
