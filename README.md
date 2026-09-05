@@ -1,3 +1,76 @@
+# Qt 5 to Qt 6.8, phase by phase
+
+This is a fork of [IndeemaSoftware/QSimpleScada](https://github.com/IndeemaSoftware/QSimpleScada),
+last touched upstream in September 2020. MIT licensed, copyright Indeema
+Software Inc. Their README is below, unchanged.
+
+What is added here is the migration: qmake to CMake, Qt 5 to Qt 6.8 LTS,
+done in separate commits so the diff for each phase can be read on its
+own.
+
+```
+Phase 0   upstream, unmodified
+Phase 3   qmake to CMake
+Phase 4   QTextStream::setCodec, removed in Qt 6
+Phase 5   a characterisation test, and what it caught
+```
+
+## What it cost
+
+| | |
+|---|---|
+| Files changed from upstream | 2 |
+| Lines changed in application code | 2 |
+| Qt5Compat | never linked |
+| Build | 49.7 s with nmake, 21.0 s with Ninja |
+| Warnings | 0 either way |
+
+The build times compare nmake with Ninja, not Qt 5 with Qt 6. Quoting
+that as a speedup would be dishonest.
+
+## The bit worth reading
+
+The project has no tests, so I wrote a probe for the one path the
+migration touched: writing non-ASCII text through `QTextStream`. One
+source file, built under both Qt versions, output hashed.
+
+The API change turned out fine. `setCodec("UTF-8")` and
+`setEncoding(QStringConverter::Utf8)` produce byte-identical output,
+sha256 `c3f8e131...` on both.
+
+The build system change did not. Under Qt 5 without `/utf-8` the same
+program wrote 227 bytes instead of 240, with Cyrillic, CJK and emoji
+going out as `?`. Qt 6's CMake setup passes `/utf-8` to MSVC and qmake
+never did, so MSVC had been reading the source in the system codepage
+and mangling the literals at compile time.
+
+Adding that one flag to the qmake build made the output match byte for
+byte, which is how I know that was the cause and not Qt.
+
+**So the behaviour changed, and nothing in the application diff explains
+it.** On a real codebase that is degree symbols in unit labels, umlauts,
+Devanagari. It is a fix, but it is still a change, and it should be
+found on purpose rather than by a customer.
+
+## Also worth knowing
+
+A grep for `QTextCodec` across this codebase returns zero hits. The
+compiler found two, because the code calls a `QTextStream` method that
+takes one without ever naming the class. Any audit that counts removed
+APIs by searching for names is reporting a floor, not a total.
+
+## Building
+
+```
+cmake -S . -B build -G Ninja -DCMAKE_PREFIX_PATH=/path/to/qt6
+cmake --build build
+```
+
+Qt 6.5 or newer. `verify/` holds the encoding probe and its qmake and
+CMake project files, if you want to reproduce the result above.
+
+---
+
   <img src="https://i.imgur.com/VDz3b4Y.png" />
 
 # QSimpleScada
